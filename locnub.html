@@ -1,76 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Search Engine</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
-  </head>
-  <body>
-    <div class="container">
-      <form id="searchForm" method="get">
-        <div class="row">
-          <div class="twelve columns">
-            <input type="text" name="q" placeholder="Search">
-          </div>
-        </div>
-      </form>
-    </div>
+<html>
+<head>
+	<title>Website Search</title>
+	<script>
+		const searchCommands = {
+			"g": "https://www.google.com/search?q=",
+			"am": "https://www.amazon.com/s?k=",
+			"yt": "https://www.youtube.com/results?search_query="
+		};
 
-    <script>
-      const searchCommands = {
-        g: 'https://www.google.com/search?q=',
-        wk: 'https://en.wikipedia.org/w/index.php?search=',
-        gd: 'https://www.goodreads.com/search?q=',
-        ad: 'https://www.audible.com/search?keywords=',
-        hb: 'https://www.heb.com/search/?term=',
-        dr: 'https://www.drupal.org/search/site/',
-        yt: 'https://www.youtube.com/results?search_query=',
-        rd: 'https://www.reddit.com/search/?q=',
-        sl: 'https://slickdeals.net/newsearch.php?q=',
-        st: 'https://stackoverflow.com/search?q=',
-        tw: 'https://twitter.com/search?q=',
-        gt: 'https://github.com/search?q=',
-        ar: 'https://archive.org/search.php?query='
-      };
-
-      const searchForm = document.querySelector('#searchForm');
-      const searchInput = searchForm.querySelector('input[name="q"]');
-
-      function getSearchQuery() {
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        return urlParams.get('q');
-      }
-
-      function getSearchCommand(query) {
-        const words = query.trim().split(' ');
-        const firstWord = words[0].toLowerCase();
-        if (searchCommands.hasOwnProperty(firstWord)) {
-          return searchCommands[firstWord] + words.slice(1).join('+');
-        } else {
-          return searchCommands.g + query;
-        }
-      }
-
-      function handleSearchFormSubmit(event) {
-        event.preventDefault();
-        const query = searchInput.value.trim();
-        const searchUrl = getSearchCommand(query);
-        window.location.href = searchUrl;
-      }
-
-      // Set the focus on the search input field when the page loads
-      searchInput.focus();
-
-      // Get the search query from the URL and submit the form
-      const searchQuery = getSearchQuery();
-      if (searchQuery) {
-        searchInput.value = searchQuery;
-        searchForm.submit();
-      }
-
-      searchForm.addEventListener('submit', handleSearchFormSubmit);
-    </script>
-  </body>
+		function submitForm() {
+			var query = document.getElementById("search-box").value.trim();
+			if (query.length === 0) {
+				return;
+			}
+			var command = query.split(" ")[0];
+			var url = searchCommands[command] || searchCommands["g"];
+			if (command in searchCommands) {
+				window.location.href = url + encodeURIComponent(query.slice(command.length + 1));
+			} else {
+				window.location.href = searchCommands["g"] + encodeURIComponent(query);
+			}
+		}
+	</script>
+</head>
+<body onload="document.getElementById('search-box').focus();">
+	<form onsubmit="submitForm(); return false;">
+		<input type="text" id="search-box" name="q" placeholder="Search" autocomplete="off">
+		<button type="submit">Search</button>
+	</form>
+	<p>Available commands: g, am, yt</p>
+	<script>
+		var urlParams = new URLSearchParams(window.location.search);
+		var query = urlParams.get("q");
+		if (query) {
+			document.getElementById("search-box").value = query;
+			submitForm();
+		}
+	</script>
+</body>
 </html>
-

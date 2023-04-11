@@ -1,36 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Search Page</title>
+	<meta charset="UTF-8">
+	<title>Search Engine</title>
+	<style type="text/css">
+		body {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+			margin: 0;
+			padding: 0;
+		}
+		input[type=text] {
+			font-size: 1.5rem;
+			padding: 0.5rem;
+			width: 30rem;
+			max-width: 100%;
+			border-radius: 0.25rem;
+			border: none;
+			box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+			outline: none;
+		}
+		input[type=submit] {
+			font-size: 1.25rem;
+			padding: 0.5rem 1rem;
+			margin-left: 0.5rem;
+			background-color: #4CAF50;
+			color: white;
+			border-radius: 0.25rem;
+			border: none;
+			cursor: pointer;
+			box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+			transition: all 0.2s ease-in-out;
+		}
+		input[type=submit]:hover {
+			background-color: #3e8e41;
+		}
+	</style>
 </head>
 <body>
-	<form onsubmit="event.preventDefault(); search();">
-		<input type="text" id="search-field" placeholder="Enter search command...">
-		<button type="submit">Search</button>
+	<form id="search-form">
+		<input type="text" id="search-query" placeholder="Enter your search here">
+		<input type="submit" value="Search">
 	</form>
-	<script>
-		function search() {
-			var query = document.getElementById("search-field").value.trim();
-			var parts = query.split(" ");
-			var command = parts[0].toLowerCase();
-			var searchQuery = parts.slice(1).join("+");
+	<script type="text/javascript">
+		// Get search query from URL arguments
+		const urlParams = new URLSearchParams(window.location.search);
+		const searchQuery = urlParams.get('q');
+		if (searchQuery) {
+			document.getElementById('search-query').value = searchQuery;
+			search();
+		}
 
-			switch (command) {
-				case "g":
-					window.location.href = "https://www.google.com/search?q=" + searchQuery;
-					break;
-				case "y":
-					window.location.href = "https://www.youtube.com/results?search_query=" + searchQuery;
-					break;
-				case "w":
-					window.location.href = "https://en.wikipedia.org/wiki/" + searchQuery;
-					break;
-				case "am":
-					window.location.href = "https://www.amazon.com/s?k=" + searchQuery;
-					break;
-				default:
-					alert("Invalid command.");
+		// Focus on search field when page loads
+		document.getElementById('search-query').focus();
+
+		// Handle form submission
+		document.getElementById('search-form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			search();
+		});
+
+		// Perform search based on query
+		function search() {
+			const query = document.getElementById('search-query').value.trim().toLowerCase();
+			let url = '';
+			if (query.startsWith('g ')) {
+				url = 'https://www.google.com/search?q=' + encodeURIComponent(query.substring(2));
+			} else if (query.startsWith('am ')) {
+				url = 'https://www.amazon.com/s?k=' + encodeURIComponent(query.substring(3));
+			} else {
+				alert('Invalid search command');
+				return;
 			}
+			window.location.href = url;
 		}
 	</script>
 </body>

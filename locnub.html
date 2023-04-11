@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Search Page</title>
+</head>
+<body>
+	<form onsubmit="event.preventDefault(); search();">
+		<input type="text" id="search-field" placeholder="Enter search command...">
+		<button type="submit">Search</button>
+	</form>
+	<script>
+		function search() {
+			var query = document.getElementById("search-field").value.trim();
+			var parts = query.split(" ");
+			var command = parts[0].toLowerCase();
+			var searchQuery = parts.slice(1).join("+");
+
+			switch (command) {
+				case "g":
+					window.location.href = "https://www.google.com/search?q=" + searchQuery;
+					break;
+				case "y":
+					window.location.href = "https://www.youtube.com/results?search_query=" + searchQuery;
+					break;
+				case "w":
+					window.location.href = "https://en.wikipedia.org/wiki/" + searchQuery;
+					break;
+				case "am":
+					window.location.href = "https://www.amazon.com/s?k=" + searchQuery;
+					break;
+				default:
+					alert("Invalid command.");
+			}
+		}
+	</script>
+</body>
+</html>

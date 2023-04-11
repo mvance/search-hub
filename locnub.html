@@ -1,67 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Search Engine</title>
+	<title>Search Page</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
 </head>
 <body>
-	<form id="search-form">
-		<input type="text" id="search-query" placeholder="Enter your search here">
-		<input type="submit" value="Search">
-	</form>
-	<script type="text/javascript">
-        const searchCommands = {
-          "g": "https://www.google.com/search?q=",
-          "am": "https://www.amazon.com/s?k=",
-          "wp": "https://en.wikipedia.org/w/index.php?search=",
-          "gr": "https://www.goodreads.com/search?q=",
-          "au": "https://www.audible.com/search?keywords=",
-          "hb": "https://www.heb.com/search/?q=",
-          "dr": "https://www.drupal.org/search/site/",
-          "yt": "https://www.youtube.com/results?search_query=",
-          "rd": "https://www.reddit.com/search/?q=",
-          "sd": "https://slickdeals.net/newsearch.php?q=",
-          "so": "https://stackoverflow.com/search?q=",
-          "tw": "https://twitter.com/search?q=",
-          "gh": "https://github.com/search?q=",
-          "ar": "https://archive.org/search.php?query="
-        };
+	<div class="container">
+		<form action="https://www.google.com/search" method="GET">
+			<input type="text" class="u-full-width" placeholder="Search..." name="q">
+			<input type="submit" value="Search">
+		</form>
+	</div>
 
-	// Get search query from URL arguments
-	const urlParams = new URLSearchParams(window.location.search);
-	const searchQuery = urlParams.get('q');
-	if (searchQuery) {
-		document.getElementById('search-query').value = searchQuery;
-		search();
-	}
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			document.querySelector('input[type="text"]').focus();
+		});
 
-	// Focus on search field when page loads
-	document.getElementById('search-query').focus();
+		const searchCommands = {
+			'g': 'https://www.google.com/search?q=',
+			'a': 'https://www.amazon.com/s?k=',
+			'w': 'https://en.wikipedia.org/w/index.php?search=',
+			'gr': 'https://www.goodreads.com/search?q=',
+			'ab': 'https://www.audible.com/search?keywords=',
+			'heb': 'https://www.heb.com/search/?term=',
+			'drupal': 'https://www.drupal.org/search/site/',
+			'yt': 'https://www.youtube.com/results?search_query=',
+			'reddit': 'https://www.reddit.com/search?q=',
+			'slickdeals': 'https://slickdeals.net/newsearch.php?q=',
+			'stackoverflow': 'https://stackoverflow.com/search?q=',
+			'twitter': 'https://twitter.com/search?q=',
+			'github': 'https://github.com/search?q=',
+			'archive': 'https://archive.org/search.php?query='
+		};
 
-	// Handle form submission
-	document.getElementById('search-form').addEventListener('submit', function(e) {
-		e.preventDefault();
-		search();
-	});
+		const searchForm = document.querySelector('form');
+		const searchInput = searchForm.querySelector('input[type="text"]');
 
-	// Perform search based on query
-	function search() {
-		const query = document.getElementById('search-query').value.trim().toLowerCase();
-		let url = '';
-		const parts = query.split(' ');
-		if (parts.length < 2) {
-			alert('Invalid search command');
-			return;
+		searchForm.addEventListener('submit', event => {
+			event.preventDefault();
+			let query = searchInput.value.trim();
+			if (query === '') {
+				return;
+			}
+
+			let command = query.split(' ')[0];
+			let searchUrl = searchCommands[command] || searchCommands['g'];
+			query = query.replace(command, '').trim().replace(/\s+/g, '+');
+
+			window.location.href = `${searchUrl}${query}`;
+		});
+
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.has('q')) {
+			let query = urlParams.get('q').replace(/\+/g, ' ');
+			searchInput.value = query;
+			searchForm.submit();
 		}
-		const command = parts.shift();
-		const commandUrl = searchCommands[command];
-		if (!commandUrl) {
-			alert('Invalid search command');
-			return;
-		}
-		url = commandUrl + encodeURIComponent(parts.join(' '));
-		window.location.href = url;
-	}
-</script>
+	</script>
 </body>
 </html>
+

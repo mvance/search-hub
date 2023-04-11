@@ -1,64 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Search Page</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
-</head>
-<body>
-	<div class="container">
-		<form action="https://www.google.com/search" method="GET">
-			<input type="text" class="u-full-width" placeholder="Search..." name="q">
-			<input type="submit" value="Search">
-		</form>
-	</div>
+  <head>
+    <meta charset="UTF-8">
+    <title>Search Engine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <form id="searchForm" method="get">
+        <div class="row">
+          <div class="twelve columns">
+            <input type="text" name="q" placeholder="Search">
+          </div>
+        </div>
+      </form>
+    </div>
 
-	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-			document.querySelector('input[type="text"]').focus();
-		});
+    <script>
+      const searchCommands = {
+        g: 'https://www.google.com/search?q=',
+        wk: 'https://en.wikipedia.org/w/index.php?search=',
+        gd: 'https://www.goodreads.com/search?q=',
+        ad: 'https://www.audible.com/search?keywords=',
+        hb: 'https://www.heb.com/search/?term=',
+        dr: 'https://www.drupal.org/search/site/',
+        yt: 'https://www.youtube.com/results?search_query=',
+        rd: 'https://www.reddit.com/search/?q=',
+        sl: 'https://slickdeals.net/newsearch.php?q=',
+        st: 'https://stackoverflow.com/search?q=',
+        tw: 'https://twitter.com/search?q=',
+        gt: 'https://github.com/search?q=',
+        ar: 'https://archive.org/search.php?query='
+      };
 
-		const searchCommands = {
-			'g': 'https://www.google.com/search?q=',
-			'a': 'https://www.amazon.com/s?k=',
-			'w': 'https://en.wikipedia.org/w/index.php?search=',
-			'gr': 'https://www.goodreads.com/search?q=',
-			'ab': 'https://www.audible.com/search?keywords=',
-			'heb': 'https://www.heb.com/search/?term=',
-			'drupal': 'https://www.drupal.org/search/site/',
-			'yt': 'https://www.youtube.com/results?search_query=',
-			'reddit': 'https://www.reddit.com/search?q=',
-			'slickdeals': 'https://slickdeals.net/newsearch.php?q=',
-			'stackoverflow': 'https://stackoverflow.com/search?q=',
-			'twitter': 'https://twitter.com/search?q=',
-			'github': 'https://github.com/search?q=',
-			'archive': 'https://archive.org/search.php?query='
-		};
+      const searchForm = document.querySelector('#searchForm');
+      const searchInput = searchForm.querySelector('input[name="q"]');
 
-		const searchForm = document.querySelector('form');
-		const searchInput = searchForm.querySelector('input[type="text"]');
+      function getSearchQuery() {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        return urlParams.get('q');
+      }
 
-		searchForm.addEventListener('submit', event => {
-			event.preventDefault();
-			let query = searchInput.value.trim();
-			if (query === '') {
-				return;
-			}
+      function getSearchCommand(query) {
+        const words = query.trim().split(' ');
+        const firstWord = words[0].toLowerCase();
+        if (searchCommands.hasOwnProperty(firstWord)) {
+          return searchCommands[firstWord] + words.slice(1).join('+');
+        } else {
+          return searchCommands.g + query;
+        }
+      }
 
-			let command = query.split(' ')[0];
-			let searchUrl = searchCommands[command] || searchCommands['g'];
-			query = query.replace(command, '').trim().replace(/\s+/g, '+');
+      function handleSearchFormSubmit(event) {
+        event.preventDefault();
+        const query = searchInput.value.trim();
+        const searchUrl = getSearchCommand(query);
+        window.location.href = searchUrl;
+      }
 
-			window.location.href = `${searchUrl}${query}`;
-		});
+      // Set the focus on the search input field when the page loads
+      searchInput.focus();
 
-		const urlParams = new URLSearchParams(window.location.search);
-		if (urlParams.has('q')) {
-			let query = urlParams.get('q').replace(/\+/g, ' ');
-			searchInput.value = query;
-			searchForm.submit();
-		}
-	</script>
-</body>
+      // Get the search query from the URL and submit the form
+      const searchQuery = getSearchQuery();
+      if (searchQuery) {
+        searchInput.value = searchQuery;
+        searchForm.submit();
+      }
+
+      searchForm.addEventListener('submit', handleSearchFormSubmit);
+    </script>
+  </body>
 </html>
 

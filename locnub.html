@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Search Engine</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
 	<style type="text/css">
 		body {
 			display: flex;
@@ -45,6 +46,20 @@
 		<input type="submit" value="Search">
 	</form>
 	<script type="text/javascript">
+                const searchCommands = {
+                  "g": "https://www.google.com/search?q=",
+                  "am": "https://www.amazon.com/s?k=",
+                  "wp": "https://en.wikipedia.org/w/index.php?search=",
+                  "gr": "https://www.goodreads.com/search?q=",
+                  "au": "https://www.audible.com/search?keywords=",
+                  "hb": "https://www.heb.com/search/?q=",
+                  "dr": "https://www.drupal.org/search/site/",
+                  "yt": "https://www.youtube.com/results?search_query=",
+                  "rd": "https://www.reddit.com/search/?q=",
+                  "sd": "https://slickdeals.net/newsearch.php?q=",
+                  "ar": "https://archive.org/search.php?query="
+                };
+
 		// Get search query from URL arguments
 		const urlParams = new URLSearchParams(window.location.search);
 		const searchQuery = urlParams.get('q');
@@ -66,14 +81,18 @@
 		function search() {
 			const query = document.getElementById('search-query').value.trim().toLowerCase();
 			let url = '';
-			if (query.startsWith('g ')) {
-				url = 'https://www.google.com/search?q=' + encodeURIComponent(query.substring(2));
-			} else if (query.startsWith('am ')) {
-				url = 'https://www.amazon.com/s?k=' + encodeURIComponent(query.substring(3));
-			} else {
+			const parts = query.split(' ');
+			if (parts.length < 2) {
 				alert('Invalid search command');
 				return;
 			}
+			const command = parts.shift();
+			const commandUrl = searchCommands[command];
+			if (!commandUrl) {
+				alert('Invalid search command');
+				return;
+			}
+			url = commandUrl + encodeURIComponent(parts.join(' '));
 			window.location.href = url;
 		}
 	</script>

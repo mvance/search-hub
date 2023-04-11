@@ -6,7 +6,18 @@
 		const searchCommands = {
 			"g": "https://www.google.com/search?q=",
 			"am": "https://www.amazon.com/s?k=",
-			"yt": "https://www.youtube.com/results?search_query="
+			"yt": "https://www.youtube.com/results?search_query=",
+                        "wk": "https://en.wikipedia.org/wiki/",
+                        "gd": "https://www.goodreads.com/search?q=",
+                        "ad": "https://www.audible.com/search?keywords=",
+                        "hb": "https://www.heb.com/search/?q=",
+                        "dr": "https://www.drupal.org/search/site/",
+                        "rd": "https://www.reddit.com/search/?q=",
+                        "sl": "https://slickdeals.net/newsearch.php?q=",
+                        "st": "https://stackoverflow.com/search?q=",
+                        "tw": "https://twitter.com/search?q=",
+                        "gt": "https://github.com/search?q=",
+                        "ar": "https://archive.org/search.php?query="
 		};
 
 		function submitForm() {
@@ -29,7 +40,7 @@
 		<input type="text" id="search-box" name="q" placeholder="Search" autocomplete="off">
 		<button type="submit">Search</button>
 	</form>
-	<p>Available commands: g, am, yt</p>
+	<p>Available commands: g, am, yt, wk, gd, ad, hb, dr, rd, sl, st, tw, gt, ar</p>
 	<script>
 		var urlParams = new URLSearchParams(window.location.search);
 		var query = urlParams.get("q");

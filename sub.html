@@ -5,6 +5,26 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+	<style>
+		.search-form {
+			display: flex;
+			gap: 0.5rem;
+			align-items: end;
+		}
+		.search-form input {
+			flex: 1;
+			margin-bottom: 0;
+			width: 85%;
+		}
+		.search-form button {
+			margin-bottom: 0;
+			white-space: nowrap;
+			width: 15%;
+		}
+		table tbody tr:nth-child(odd) {
+			background-color: var(--pico-muted-border-color);
+		}
+	</style>
 	<script>
                 const searchCommands = {
                     "ad": "https://www.audible.com/search?keywords=",
@@ -65,7 +85,7 @@
 <body onload="document.getElementById('search-box').focus();">
 	<main class="container">
 		<h1>sub - Search Hub</h1>
-		<form onsubmit="submitForm(); return false;">
+		<form class="search-form" onsubmit="submitForm(); return false;">
 			<input type="text" id="search-box" name="q" placeholder="Enter search command and query..." autocomplete="off">
 			<button type="submit">Search</button>
 		</form>

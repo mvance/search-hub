@@ -2,18 +2,9 @@
 <html>
 <head>
 	<title>sub - Search Hub</title>
-	<style>
-	  table.zebra tbody tr:nth-child(odd) {
-	    background-color: #f9f9f9;
-	  }
-	  table.zebra tbody tr:nth-child(even) {
-	    background-color: #e9e9e9;
-	  }
-	  table.zebra th, table.zebra td {
-	    padding: 0.5em 1em;
-	    text-align: left;
-	  }
-	</style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
 	<script>
                 const searchCommands = {
                     "ad": "https://www.audible.com/search?keywords=",
@@ -72,22 +63,26 @@
 	</script>
 </head>
 <body onload="document.getElementById('search-box').focus();">
-	<form onsubmit="submitForm(); return false;">
-		<input type="text" id="search-box" name="q" placeholder="Search" autocomplete="off">
-		<button type="submit">Search</button>
-	</form>
-        <div class="container">
-          <h1>Search Commands</h1>
-          <table class="u-full-width zebra">
-            <thead>
-              <tr>
-                <th>Command</th>
-                <th>URL</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-          </table>
-        </div>
+	<main class="container">
+		<h1>sub - Search Hub</h1>
+		<form onsubmit="submitForm(); return false;">
+			<input type="text" id="search-box" name="q" placeholder="Enter search command and query..." autocomplete="off">
+			<button type="submit">Search</button>
+		</form>
+		
+		<section>
+			<h2>Available Search Commands</h2>
+			<table>
+				<thead>
+					<tr>
+						<th>Command</th>
+						<th>URL</th>
+					</tr>
+				</thead>
+				<tbody id="tableBody"></tbody>
+			</table>
+		</section>
+	</main>
 	<script>
 		var urlParams = new URLSearchParams(window.location.search);
 		var query = urlParams.get("q");

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>sub - Search Hub</title>
+	<style>
+	  table.zebra tbody tr:nth-child(odd) {
+	    background-color: #f9f9f9;
+	  }
+	  table.zebra tbody tr:nth-child(even) {
+	    background-color: #e9e9e9;
+	  }
+	  table.zebra th, table.zebra td {
+	    padding: 0.5em 1em;
+	    text-align: left;
+	  }
+	</style>
+	<script>
+                const searchCommands = {
+                    "ad": "https://www.audible.com/search?keywords=",
+                    "am": "https://www.amazon.com/s?k=",
+                    "ar": "https://archive.org/search.php?query=",
+                    "as": "https://austin.bibliocommons.com/v2/search?searchType=smart&query=",
+                    "bk": "https://www.bookpecker.com/search/",
+                    "ch": "https://ch.at/search?q=",
+                    "br": "https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q=",
+                    "dr": "https://www.drupal.org/search/site/",
+                    "eb": "https://www.ebay.com/sch/i.html?_sacat=0&_sop=15&_from=R40&_nkw=",
+                    "g": "https://www.google.com/search?q=",
+                    "gd": "https://www.goodreads.com/search?q=",
+                    "gn": "https://news.google.com/search?hl=en-US&gl=US&ceid=US%3Aen&q=",
+                    "gt": "https://github.com/search?q=",
+                    "hb": "https://www.heb.com/search/?q=",
+                    "hp": "https://www.hoopladigital.com/search?page=1&q=",
+                    "kg": "https://kagi.com/search?q=",
+                    "ks": "https://kagi.com/summarizer/index.html?target_language=&summary=summary&url=",
+                    "lb": "https://libgen.lc/search.php?req=",
+                    "lt": "https://www.listennotes.com/search/?q=",
+                    "ls": "", // Will set to current URL later
+                    "ov": "https://www.overdrive.com/search?q=",
+                    "pn": "https://pinboard.in/search/?query=",
+                    "pr": "https://www.perplexity.ai/search?q=",
+                    "rd": "https://www.reddit.com/search/?q=",
+                    "sb": "https://sobrief.com/search?q=",
+                    "sl": "https://slickdeals.net/newsearch.php?q=",
+                    "sm": "https://www.smry.ai/proxy?url=",
+                    "st": "https://stackoverflow.com/search?q=",
+                    "th": "https://www.thriftbooks.com/browse/?b.search=",
+                    "tw": "https://twitter.com/search?q=",
+                    "wk": "https://en.wikipedia.org/w/index.php?title=Special%3ASearch&ns0=1&fulltext=Search&search=",
+                    "wr": "https://www.worldcat.org/search?q=",
+                    "yt": "https://www.youtube.com/results?search_query="
+                };
+
+		function submitForm() {
+			var query = document.getElementById("search-box").value.trim();
+			if (query.length === 0) {
+				return;
+			}
+			var command = query.split(" ")[0];
+			// Special handling for "ls"
+			if (command === "ls") {
+				// Do nothing; stay on the current page
+				return;
+			}
+			var url = searchCommands[command] || searchCommands["g"];
+			if (command in searchCommands) {
+				window.location.href = url + encodeURIComponent(query.slice(command.length + 1));
+			} else {
+				window.location.href = searchCommands["g"] + encodeURIComponent(query);
+			}
+		}
+	</script>
+</head>
+<body onload="document.getElementById('search-box').focus();">
+	<form onsubmit="submitForm(); return false;">
+		<input type="text" id="search-box" name="q" placeholder="Search" autocomplete="off">
+		<button type="submit">Search</button>
+	</form>
+        <div class="container">
+          <h1>Search Commands</h1>
+          <table class="u-full-width zebra">
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>URL</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+	<script>
+		var urlParams = new URLSearchParams(window.location.search);
+		var query = urlParams.get("q");
+		if (query) {
+			document.getElementById("search-box").value = query;
+			submitForm();
+		}
+                // Update "ls" command to current URL
+                searchCommands["ls"] = window.location.href;
+
+                const tableBody = document.getElementById("tableBody");
+                for (let [command, url] of Object.entries(searchCommands)) {
+                  const row = document.createElement("tr");
+                  const commandCell = document.createElement("td");
+                  commandCell.textContent = command;
+                  const urlCell = document.createElement("td");
+                  // For "ls", show the current URL
+                  if (command === "ls") {
+                    urlCell.textContent = window.location.href;
+                  } else {
+                    urlCell.textContent = url;
+                  }
+                  row.appendChild(commandCell);
+                  row.appendChild(urlCell);
+                  tableBody.appendChild(row);
+                }
+	</script>
+</body>
+</html>

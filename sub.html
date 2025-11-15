@@ -72,7 +72,14 @@
 			if (command !== "ls") {
 				var url = searchCommands[command] || searchCommands["g"];
 				if (command in searchCommands) {
-					window.location.href = url + encodeURIComponent(urlQuery.slice(command.length + 1));
+					var searchTerm = urlQuery.slice(command.length + 1).trim();
+					if (searchTerm) {
+						window.location.href = url + encodeURIComponent(searchTerm);
+					} else {
+						// No search term, redirect to base hostname
+						var baseUrl = new URL(url);
+						window.location.href = baseUrl.protocol + "//" + baseUrl.hostname;
+					}
 				} else {
 					window.location.href = searchCommands["g"] + encodeURIComponent(urlQuery);
 				}
@@ -92,7 +99,14 @@
 			}
 			var url = searchCommands[command] || searchCommands["g"];
 			if (command in searchCommands) {
-				window.location.href = url + encodeURIComponent(query.slice(command.length + 1));
+				var searchTerm = query.slice(command.length + 1).trim();
+				if (searchTerm) {
+					window.location.href = url + encodeURIComponent(searchTerm);
+				} else {
+					// No search term, redirect to base hostname
+					var baseUrl = new URL(url);
+					window.location.href = baseUrl.protocol + "//" + baseUrl.hostname;
+				}
 			} else {
 				window.location.href = searchCommands["g"] + encodeURIComponent(query);
 			}

@@ -9,22 +9,126 @@
 	<style>
 		.search-form {
 			display: flex;
-			gap: 0.5rem;
+			gap: 0.75rem;
 			align-items: end;
+			margin-bottom: 2rem;
 		}
 		.search-form input {
 			flex: 1;
 			margin-bottom: 0;
-			width: 85%;
+			font-size: 1.1rem;
+			padding: 0.75rem;
+			min-height: 44px;
 		}
 		.search-form button {
 			margin-bottom: 0;
 			white-space: nowrap;
-			width: 15%;
+			min-width: 80px;
+			min-height: 44px;
+			padding: 0.75rem 1rem;
+			background-color: #0066cc;
+			border-color: #0066cc;
 		}
+		.search-form button:hover {
+			background-color: #0052a3;
+			border-color: #0052a3;
+		}
+		
+		.commands-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+			gap: 1rem;
+			margin-bottom: 2rem;
+		}
+		
+		.command-card {
+			display: block;
+			padding: 1rem;
+			border: 1px solid #e0e6ed;
+			border-radius: 0.5rem;
+			text-decoration: none;
+			color: inherit;
+			transition: all 0.2s ease;
+			background: white;
+			min-height: 44px;
+		}
+		
+		.command-card:hover {
+			border-color: #0066cc;
+			box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
+			text-decoration: none;
+			color: inherit;
+		}
+		
+		.command-name {
+			font-weight: bold;
+			color: #0066cc;
+			font-size: 1.1rem;
+		}
+		
+		.command-site {
+			color: #666;
+			font-size: 0.9rem;
+			margin-top: 0.25rem;
+		}
+		
+		.details-toggle {
+			text-align: center;
+			margin: 2rem 0;
+		}
+		
+		.details-toggle button {
+			background: none;
+			border: 1px solid #0066cc;
+			color: #0066cc;
+			padding: 0.5rem 1rem;
+			border-radius: 0.25rem;
+			cursor: pointer;
+			min-height: 44px;
+		}
+		
+		.details-toggle button:hover {
+			background-color: #0066cc;
+			color: white;
+		}
+		
+		.details-table {
+			display: none;
+		}
+		
+		.details-table.show {
+			display: block;
+		}
+		
 		table tbody > tr:nth-child(odd) td {
 			background-color: #f3f5f7 !important;
 		}
+		
+		.command-link {
+			color: #0066cc;
+			text-decoration: none;
+			font-weight: bold;
+		}
+		
+		.command-link:hover {
+			text-decoration: underline;
+		}
+		
+		@media (max-width: 768px) {
+			.commands-grid {
+				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			}
+			
+			table {
+				font-size: 0.9rem;
+			}
+			
+			table td:nth-child(2) {
+				word-break: break-all;
+				max-width: 200px;
+			}
+		}
+		
 		section {
 			margin-top: 2rem;
 		}
@@ -125,37 +229,147 @@
 		
 		<section>
 			<h2>Available Search Commands</h2>
-			<table>
-				<thead>
-					<tr>
-						<th>Command</th>
-						<th>URL</th>
-					</tr>
-				</thead>
-				<tbody id="tableBody"></tbody>
-			</table>
+			<div class="commands-grid" id="commandsGrid"></div>
+			
+			<div class="details-toggle">
+				<button onclick="toggleDetails()" id="toggleButton">Show Details</button>
+			</div>
+			
+			<div class="details-table" id="detailsTable">
+				<table>
+					<thead>
+						<tr>
+							<th>Command</th>
+							<th>URL</th>
+						</tr>
+					</thead>
+					<tbody id="tableBody"></tbody>
+				</table>
+			</div>
 		</section>
 	</main>
 	<script>
-                // Update "ls" command to current URL
-                searchCommands["ls"] = window.location.href;
+		// Site names for better UX
+		const siteNames = {
+			"ad": "Audible",
+			"am": "Amazon",
+			"ar": "Archive.org",
+			"as": "Austin Public Library",
+			"bk": "BookPecker",
+			"ch": "ch.at",
+			"br": "BoardGameGeek",
+			"dr": "Drupal.org",
+			"eb": "eBay",
+			"g": "Google",
+			"gd": "Goodreads",
+			"gn": "Google News",
+			"gt": "GitHub",
+			"hb": "H-E-B",
+			"hp": "Hoopla Digital",
+			"kg": "Kagi",
+			"ks": "Kagi Summarizer",
+			"ls": "List commands (current page)",
+			"lt": "Listen Notes",
+			"ov": "OverDrive",
+			"pn": "Pinboard",
+			"pr": "Perplexity AI",
+			"rd": "Reddit",
+			"sb": "SoBrief",
+			"sl": "Slickdeals",
+			"sm": "Smry.ai",
+			"st": "Stack Overflow",
+			"th": "ThriftBooks",
+			"tw": "Twitter",
+			"vb": "vb.lk (Vibe Links)",
+			"wk": "Wikipedia",
+			"wr": "WorldCat",
+			"yt": "YouTube"
+		};
 
-                const tableBody = document.getElementById("tableBody");
-                for (let [command, url] of Object.entries(searchCommands)) {
-                  const row = document.createElement("tr");
-                  const commandCell = document.createElement("td");
-                  commandCell.textContent = command;
-                  const urlCell = document.createElement("td");
-                  // For "ls", show the current URL
-                  if (command === "ls") {
-                    urlCell.textContent = window.location.href;
-                  } else {
-                    urlCell.textContent = url;
-                  }
-                  row.appendChild(commandCell);
-                  row.appendChild(urlCell);
-                  tableBody.appendChild(row);
-                }
+		function goToSite(command) {
+			if (command === "ls") {
+				return; // Don't redirect for ls command
+			}
+			var url = searchCommands[command];
+			if (url) {
+				var baseUrl = new URL(url);
+				window.location.href = baseUrl.protocol + "//" + baseUrl.hostname;
+			}
+		}
+
+		function toggleDetails() {
+			const detailsTable = document.getElementById("detailsTable");
+			const toggleButton = document.getElementById("toggleButton");
+			
+			if (detailsTable.classList.contains("show")) {
+				detailsTable.classList.remove("show");
+				toggleButton.textContent = "Show Details";
+			} else {
+				detailsTable.classList.add("show");
+				toggleButton.textContent = "Hide Details";
+			}
+		}
+
+		// Update "ls" command to current URL
+		searchCommands["ls"] = window.location.href;
+
+		// Populate commands grid
+		const commandsGrid = document.getElementById("commandsGrid");
+		for (let [command, url] of Object.entries(searchCommands)) {
+			if (command === "ls") continue; // Skip ls in the grid
+			
+			const card = document.createElement("a");
+			card.className = "command-card";
+			card.href = "#";
+			card.onclick = function(e) {
+				e.preventDefault();
+				goToSite(command);
+			};
+			
+			const commandName = document.createElement("div");
+			commandName.className = "command-name";
+			commandName.textContent = command;
+			
+			const siteName = document.createElement("div");
+			siteName.className = "command-site";
+			siteName.textContent = siteNames[command] || "Unknown Site";
+			
+			card.appendChild(commandName);
+			card.appendChild(siteName);
+			commandsGrid.appendChild(card);
+		}
+
+		// Populate details table
+		const tableBody = document.getElementById("tableBody");
+		for (let [command, url] of Object.entries(searchCommands)) {
+			const row = document.createElement("tr");
+			const commandCell = document.createElement("td");
+			
+			if (command === "ls") {
+				commandCell.textContent = command;
+			} else {
+				const commandLink = document.createElement("a");
+				commandLink.className = "command-link";
+				commandLink.href = "#";
+				commandLink.textContent = command;
+				commandLink.onclick = function(e) {
+					e.preventDefault();
+					goToSite(command);
+				};
+				commandCell.appendChild(commandLink);
+			}
+			
+			const urlCell = document.createElement("td");
+			// For "ls", show the current URL
+			if (command === "ls") {
+				urlCell.textContent = window.location.href;
+			} else {
+				urlCell.textContent = url;
+			}
+			row.appendChild(commandCell);
+			row.appendChild(urlCell);
+			tableBody.appendChild(row);
+		}
 	</script>
 </body>
 </html>

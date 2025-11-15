@@ -351,13 +351,15 @@
 	</script>
 	<script>
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.register('/search-hub/sw.js')
-				.then((registration) => {
-					console.log('Service Worker: Registered');
-				})
-				.catch((error) => {
-					console.log('Service Worker: Registration Failed:', error);
-				});
+			navigator.serviceWorker.register('/search-hub/sw.js', {
+				scope: '/search-hub/'
+			})
+			.then((registration) => {
+				console.log('Service Worker: Registered with explicit scope.');
+			})
+			.catch((error) => {
+				console.log('Service Worker: Registration Failed:', error);
+			});
 		}
 	</script>
 </body>

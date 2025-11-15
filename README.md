@@ -65,6 +65,7 @@ You can also use it as a search engine by passing queries via URL:
 | `st` | Stack Overflow |
 | `th` | ThriftBooks |
 | `tw` | Twitter |
+| `vb` | vb.lk (Vibe Links) |
 | `wk` | Wikipedia |
 | `wr` | WorldCat |
 | `yt` | YouTube |

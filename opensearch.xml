@@ -6,5 +6,5 @@
   <OutputEncoding>UTF-8</OutputEncoding>
   <Image width="16" height="16" type="image/x-icon">icons/favicon.ico</Image>
   <Image width="32" height="32" type="image/png">icons/favicon-32x32.png</Image>
-  <Url type="text/html" method="get" template="?q={searchTerms}"/>
+  <Url type="text/html" method="get" template="./?q={searchTerms}"/>
 </OpenSearchDescription>

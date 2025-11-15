@@ -194,37 +194,12 @@
 			}
 		}
 
-		function submitForm() {
-			var query = document.getElementById("search-box").value.trim();
-			if (query.length === 0) {
-				return;
-			}
-			var command = query.split(" ")[0];
-			// Special handling for "ls"
-			if (command === "ls") {
-				// Do nothing; stay on the current page
-				return;
-			}
-			var url = searchCommands[command] || searchCommands["g"];
-			if (command in searchCommands) {
-				var searchTerm = query.slice(command.length + 1).trim();
-				if (searchTerm) {
-					window.location.href = url + encodeURIComponent(searchTerm);
-				} else {
-					// No search term, redirect to base hostname
-					var baseUrl = new URL(url);
-					window.location.href = baseUrl.protocol + "//" + baseUrl.hostname;
-				}
-			} else {
-				window.location.href = searchCommands["g"] + encodeURIComponent(query);
-			}
-		}
 	</script>
 </head>
 <body onload="if (!urlQuery) document.getElementById('search-box').focus();">
 	<main class="container">
 		<h1>sub - Search Hub</h1>
-		<form class="search-form" onsubmit="submitForm(); return false;">
+		<form method="get" action="./" class="search-form">
 			<input type="text" id="search-box" name="q" placeholder="Enter search command and query..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
 			<button type="submit">Search</button>
 		</form>

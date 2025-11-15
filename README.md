@@ -96,6 +96,8 @@ Set `file:///path/to/sub.html` as your browser's homepage for quick access.
 Create a bookmark for easy access from any page.
 
 ### Search Engine
+The site supports OpenSearch autodiscovery, allowing you to add "sub - Search Hub" as a search engine in your browser. When you visit the site, compatible browsers will detect the search engine and offer to add it to your search options.
+
 Some browsers allow you to add custom search engines using the URL pattern with `%s` as the search term placeholder.
 
 ## License

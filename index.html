@@ -54,6 +54,7 @@
 			transition: all 0.2s ease;
 			background: white;
 			min-height: 44px;
+			cursor: pointer;
 		}
 		
 		.command-card:hover {
@@ -61,6 +62,10 @@
 			box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
 			text-decoration: none;
 			color: inherit;
+		}
+		
+		.command-card.expanded {
+			border-color: #0066cc;
 		}
 		
 		.command-header {
@@ -80,11 +85,32 @@
 			font-weight: bold;
 			color: #0066cc;
 			font-size: 1.1rem;
+			cursor: pointer;
+			padding: 0.25rem;
+			border-radius: 0.25rem;
+			transition: background-color 0.2s ease;
+		}
+		
+		.command-name:hover {
+			background-color: rgba(0, 102, 204, 0.1);
 		}
 		
 		.command-site {
 			color: #666;
 			font-size: 0.9rem;
+		}
+		
+		.command-details {
+			margin-top: 0.75rem;
+			padding-top: 0.75rem;
+			border-top: 1px solid #e0e6ed;
+			font-size: 0.85rem;
+			color: #666;
+			display: none;
+		}
+		
+		.command-details.show {
+			display: block;
 		}
 		
 		.details-toggle {
@@ -220,22 +246,6 @@
 		<section>
 			<h2>Available Search Commands</h2>
 			<div class="commands-grid" id="commandsGrid"></div>
-			
-			<div class="details-toggle">
-				<button onclick="toggleDetails()" id="toggleButton">Show Details</button>
-			</div>
-			
-			<div class="details-table" id="detailsTable">
-				<table>
-					<thead>
-						<tr>
-							<th>Command</th>
-							<th>URL</th>
-						</tr>
-					</thead>
-					<tbody id="tableBody"></tbody>
-				</table>
-			</div>
 		</section>
 	</main>
 	<script>
@@ -287,16 +297,16 @@
 			}
 		}
 
-		function toggleDetails() {
-			const detailsTable = document.getElementById("detailsTable");
-			const toggleButton = document.getElementById("toggleButton");
+		function toggleCardDetails(cardElement) {
+			const details = cardElement.querySelector('.command-details');
+			const isExpanded = details.classList.contains('show');
 			
-			if (detailsTable.classList.contains("show")) {
-				detailsTable.classList.remove("show");
-				toggleButton.textContent = "Show Details";
+			if (isExpanded) {
+				details.classList.remove('show');
+				cardElement.classList.remove('expanded');
 			} else {
-				detailsTable.classList.add("show");
-				toggleButton.textContent = "Hide Details";
+				details.classList.add('show');
+				cardElement.classList.add('expanded');
 			}
 		}
 
@@ -308,12 +318,17 @@
 		for (let [command, url] of Object.entries(searchCommands)) {
 			if (command === "ls") continue; // Skip ls in the grid
 			
-			const card = document.createElement("a");
+			const card = document.createElement("div");
 			card.className = "command-card";
-			card.href = "#";
 			card.onclick = function(e) {
-				e.preventDefault();
-				goToSite(command);
+				if (e.target.classList.contains('command-name')) {
+					// Command name clicked - go to site
+					e.stopPropagation();
+					goToSite(command);
+				} else {
+					// Card clicked - toggle details
+					toggleCardDetails(card);
+				}
 			};
 			
 			// Create header with favicon and command name
@@ -342,42 +357,16 @@
 			siteName.className = "command-site";
 			siteName.textContent = siteNames[command] || "Unknown Site";
 			
+			const details = document.createElement("div");
+			details.className = "command-details";
+			details.innerHTML = `<strong>URL:</strong> ${url}`;
+			
 			card.appendChild(commandHeader);
 			card.appendChild(siteName);
+			card.appendChild(details);
 			commandsGrid.appendChild(card);
 		}
 
-		// Populate details table
-		const tableBody = document.getElementById("tableBody");
-		for (let [command, url] of Object.entries(searchCommands)) {
-			const row = document.createElement("tr");
-			const commandCell = document.createElement("td");
-			
-			if (command === "ls") {
-				commandCell.textContent = command;
-			} else {
-				const commandLink = document.createElement("a");
-				commandLink.className = "command-link";
-				commandLink.href = "#";
-				commandLink.textContent = command;
-				commandLink.onclick = function(e) {
-					e.preventDefault();
-					goToSite(command);
-				};
-				commandCell.appendChild(commandLink);
-			}
-			
-			const urlCell = document.createElement("td");
-			// For "ls", show the current URL
-			if (command === "ls") {
-				urlCell.textContent = window.location.href;
-			} else {
-				urlCell.textContent = url;
-			}
-			row.appendChild(commandCell);
-			row.appendChild(urlCell);
-			tableBody.appendChild(row);
-		}
 	</script>
 	<script>
 		if ('serviceWorker' in navigator) {

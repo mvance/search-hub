@@ -101,11 +101,14 @@
 		}
 		
 		.command-details {
-			margin-top: 0.75rem;
-			padding-top: 0.75rem;
-			border-top: 1px solid #e0e6ed;
+			grid-column: 1 / -1;
+			margin: 1rem 0;
+			padding: 1rem;
+			border: 1px solid #e0e6ed;
+			border-radius: 0.5rem;
 			font-size: 0.85rem;
 			color: #666;
+			background: #f8f9fa;
 			display: none;
 		}
 		
@@ -297,17 +300,38 @@
 			}
 		}
 
-		function toggleCardDetails(cardElement) {
-			const details = cardElement.querySelector('.command-details');
-			const isExpanded = details.classList.contains('show');
+		function toggleCardDetails(cardElement, command) {
+			const grid = document.getElementById('commandsGrid');
+			const allCards = grid.querySelectorAll('.command-card');
+			const allDetails = grid.querySelectorAll('.command-details');
 			
-			if (isExpanded) {
-				details.classList.remove('show');
-				cardElement.classList.remove('expanded');
-			} else {
-				details.classList.add('show');
-				cardElement.classList.add('expanded');
+			// Close all expanded cards first
+			allCards.forEach(card => card.classList.remove('expanded'));
+			allDetails.forEach(detail => detail.classList.remove('show'));
+			
+			// Find which row this card is in
+			const cardIndex = Array.from(allCards).indexOf(cardElement);
+			const gridComputedStyle = window.getComputedStyle(grid);
+			const gridColumns = gridComputedStyle.getPropertyValue('grid-template-columns').split(' ').length;
+			const rowIndex = Math.floor(cardIndex / gridColumns);
+			const lastCardInRow = Math.min((rowIndex + 1) * gridColumns - 1, allCards.length - 1);
+			
+			// Create or find the details element for this command
+			let detailsElement = grid.querySelector(`[data-command="${command}"]`);
+			if (!detailsElement) {
+				detailsElement = document.createElement('div');
+				detailsElement.className = 'command-details';
+				detailsElement.setAttribute('data-command', command);
+				detailsElement.innerHTML = `<strong>Command:</strong> ${command}<br><strong>URL:</strong> ${searchCommands[command]}`;
 			}
+			
+			// Insert the details element after the last card in the row
+			const insertAfter = allCards[lastCardInRow];
+			insertAfter.parentNode.insertBefore(detailsElement, insertAfter.nextSibling);
+			
+			// Show the details and mark card as expanded
+			detailsElement.classList.add('show');
+			cardElement.classList.add('expanded');
 		}
 
 		// Update "ls" command to current URL
@@ -327,7 +351,7 @@
 					goToSite(command);
 				} else {
 					// Card clicked - toggle details
-					toggleCardDetails(card);
+					toggleCardDetails(card, command);
 				}
 			};
 			
@@ -357,13 +381,8 @@
 			siteName.className = "command-site";
 			siteName.textContent = siteNames[command] || "Unknown Site";
 			
-			const details = document.createElement("div");
-			details.className = "command-details";
-			details.innerHTML = `<strong>URL:</strong> ${url}`;
-			
 			card.appendChild(commandHeader);
 			card.appendChild(siteName);
-			card.appendChild(details);
 			commandsGrid.appendChild(card);
 		}
 

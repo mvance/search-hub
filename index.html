@@ -63,6 +63,19 @@
 			color: inherit;
 		}
 		
+		.command-header {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			margin-bottom: 0.25rem;
+		}
+		
+		.command-favicon {
+			width: 16px;
+			height: 16px;
+			flex-shrink: 0;
+		}
+		
 		.command-name {
 			font-weight: bold;
 			color: #0066cc;
@@ -72,7 +85,6 @@
 		.command-site {
 			color: #666;
 			font-size: 0.9rem;
-			margin-top: 0.25rem;
 		}
 		
 		.details-toggle {
@@ -304,15 +316,33 @@
 				goToSite(command);
 			};
 			
+			// Create header with favicon and command name
+			const commandHeader = document.createElement("div");
+			commandHeader.className = "command-header";
+			
+			// Extract hostname for favicon
+			const hostname = new URL(url).hostname;
+			const favicon = document.createElement("img");
+			favicon.className = "command-favicon";
+			favicon.src = `https://www.google.com/s2/favicons?domain=${hostname}&sz=16`;
+			favicon.alt = "";
+			favicon.onerror = function() {
+				// Hide favicon if it fails to load
+				this.style.display = "none";
+			};
+			
 			const commandName = document.createElement("div");
 			commandName.className = "command-name";
 			commandName.textContent = command;
+			
+			commandHeader.appendChild(favicon);
+			commandHeader.appendChild(commandName);
 			
 			const siteName = document.createElement("div");
 			siteName.className = "command-site";
 			siteName.textContent = siteNames[command] || "Unknown Site";
 			
-			card.appendChild(commandName);
+			card.appendChild(commandHeader);
 			card.appendChild(siteName);
 			commandsGrid.appendChild(card);
 		}

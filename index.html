@@ -345,7 +345,7 @@
 				detailsElement = document.createElement('div');
 				detailsElement.className = 'command-details';
 				detailsElement.setAttribute('data-command', command);
-				detailsElement.innerHTML = `<strong>Command:</strong> ${command}<br><strong>URL:</strong> ${searchCommands[command]}`;
+				detailsElement.innerHTML = `<strong>Command:</strong> ${command}<br><strong>URL:</strong> ${searchConfig[command].url}`;
 			}
 			
 			// Insert the details element after the last card in the row
@@ -358,11 +358,11 @@
 		}
 
 		// Update "ls" command to current URL
-		searchCommands["ls"] = window.location.href;
+		searchConfig["ls"].url = window.location.href;
 
 		// Populate commands grid
 		const commandsGrid = document.getElementById("commandsGrid");
-		for (let [command, url] of Object.entries(searchCommands)) {
+		for (let [command, config] of Object.entries(searchConfig)) {
 			if (command === "ls") continue; // Skip ls in the grid
 			
 			const card = document.createElement("div");
@@ -383,7 +383,7 @@
 			commandHeader.className = "command-header";
 			
 			// Extract hostname for favicon
-			const hostname = new URL(url).hostname;
+			const hostname = new URL(config.url).hostname;
 			const favicon = document.createElement("img");
 			favicon.className = "command-favicon";
 			favicon.src = `https://www.google.com/s2/favicons?domain=${hostname}&sz=16`;
@@ -402,7 +402,7 @@
 			
 			const siteName = document.createElement("div");
 			siteName.className = "command-site";
-			siteName.textContent = siteNames[command] || "Unknown Site";
+			siteName.textContent = config.name;
 			
 			card.appendChild(commandHeader);
 			card.appendChild(siteName);

@@ -184,6 +184,7 @@
                     "ar": "https://archive.org/search.php?query=",
                     "as": "https://austin.bibliocommons.com/v2/search?searchType=smart&query=",
                     "bk": "https://www.bookpecker.com/search/",
+                    "bl": "https://www.blinkist.com/en/app/search?q=%s",
                     "br": "https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q=",
                     "ch": "https://ch.at/search?q=",
                     "cm": "https://camelcamelcamel.com/search?sq=",
@@ -198,6 +199,7 @@
                     "hp": "https://www.hoopladigital.com/search?page=1&q=",
                     "kg": "https://kagi.com/search?q=",
                     "ks": "https://kagi.com/summarizer/index.html?target_language=&summary=summary&url=",
+                    "lb": "https://libbyapp.com/search/austinlibrary/search/scope-auto/query-%s/page-1",
                     "ls": "", // Will set to current URL later
                     "lt": "https://www.listennotes.com/search/?q=",
                     "ov": "https://www.overdrive.com/search?q=",
@@ -208,6 +210,7 @@
                     "rr": "https://read.readwise.io/search?q=",
                     "rw": "https://readwise.io/search?q=",
                     "sb": "https://sobrief.com/search?q=",
+                    "sg": "https://app.thestorygraph.com/browse?search_term=%s",
                     "sk": "https://skills.sh/?q=",
                     "sl": "https://slickdeals.net/newsearch.php?q=",
                     "sm": "https://www.smry.ai/proxy?url=",
@@ -230,7 +233,11 @@
 				if (command in searchCommands) {
 					var searchTerm = urlQuery.slice(command.length + 1).trim();
 					if (searchTerm) {
-						window.location.href = url + encodeURIComponent(searchTerm);
+						if (url.includes('%s')) {
+							window.location.href = url.replace('%s', encodeURIComponent(searchTerm));
+						} else {
+							window.location.href = url + encodeURIComponent(searchTerm);
+						}
 					} else {
 						// No search term, redirect to base hostname
 						var baseUrl = new URL(url);
@@ -279,6 +286,7 @@
 			"hp": "Hoopla Digital",
 			"kg": "Kagi",
 			"ks": "Kagi Summarizer",
+			"lb": "Libby (Austin Public Library)",
 			"ls": "List commands (current page)",
 			"lt": "Listen Notes",
 			"ov": "OverDrive",

@@ -178,51 +178,51 @@
 		}
 	</style>
 	<script>
-                const searchCommands = {
-                    "ad": "https://www.audible.com/search?keywords=",
-                    "am": "https://www.amazon.com/s?k=",
-                    "ar": "https://archive.org/search.php?query=",
-                    "as": "https://austin.bibliocommons.com/v2/search?searchType=smart&query=",
-                    "bk": "https://www.bookpecker.com/search/",
-                    "bl": "https://www.blinkist.com/en/app/search?q=%s",
-                    "br": "https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q=",
-                    "ch": "https://ch.at/search?q=",
-                    "cm": "https://camelcamelcamel.com/search?sq=",
-                    "dr": "https://www.drupal.org/search/site/",
-                    "eb": "https://www.ebay.com/sch/i.html?_sacat=0&_sop=15&_from=R40&_nkw=",
-                    "g": "https://www.google.com/search?q=",
-                    "gd": "https://www.goodreads.com/search?q=",
-                    "gl": "https://www.google.com/search?btnI=1&q=",
-                    "gn": "https://news.google.com/search?hl=en-US&gl=US&ceid=US%3Aen&q=",
-                    "gt": "https://github.com/search?q=",
-                    "hb": "https://www.heb.com/search/?q=",
-                    "hp": "https://www.hoopladigital.com/search?page=1&q=",
-                    "kg": "https://kagi.com/search?q=",
-                    "ks": "https://kagi.com/summarizer/index.html?target_language=&summary=summary&url=",
-                    "lb": "https://libbyapp.com/search/austinlibrary/search/scope-auto/query-%s/page-1",
-                    "ls": "", // Will set to current URL later
-                    "mc": "https://mcp.directory/servers?q=",
-                    "lt": "https://www.listennotes.com/search/?q=",
-                    "ov": "https://www.overdrive.com/search?q=",
-                    "pn": "https://pinboard.in/search/?query=",
-                    "pr": "https://www.perplexity.ai/search?q=",
-                    "rd": "https://www.reddit.com/search/?q=",
-                    "rn": "https://app.raindrop.io/my/0/",
-                    "rr": "https://read.readwise.io/search?q=",
-                    "rw": "https://readwise.io/search?q=",
-                    "sb": "https://sobrief.com/search?q=",
-                    "sg": "https://app.thestorygraph.com/browse?search_term=%s",
-                    "sk": "https://skills.sh/?q=",
-                    "sl": "https://slickdeals.net/newsearch.php?q=",
-                    "sm": "https://www.smry.ai/proxy?url=",
-                    "st": "https://stackoverflow.com/search?q=",
-                    "th": "https://www.thriftbooks.com/browse/?b.search=",
-                    "tw": "https://twitter.com/search?q=",
-                    "vb": "https://vb.lk/",
-                    "wk": "https://en.wikipedia.org/w/index.php?title=Special%3ASearch&ns0=1&fulltext=Search&search=",
-                    "wr": "https://www.worldcat.org/search?q=",
-                    "yt": "https://www.youtube.com/results?search_query="
-                };
+		const searchConfig = {
+			"ad": { name: "Audible", url: "https://www.audible.com/search?keywords=" },
+			"am": { name: "Amazon", url: "https://www.amazon.com/s?k=" },
+			"ar": { name: "Archive.org", url: "https://archive.org/search.php?query=" },
+			"as": { name: "Austin Public Library", url: "https://austin.bibliocommons.com/v2/search?searchType=smart&query=" },
+			"bk": { name: "BookPecker", url: "https://www.bookpecker.com/search/" },
+			"bl": { name: "Blinkist", url: "https://www.blinkist.com/en/app/search?q=%s" },
+			"br": { name: "BoardGameGeek", url: "https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q=" },
+			"ch": { name: "ch.at", url: "https://ch.at/search?q=" },
+			"cm": { name: "CamelCamelCamel", url: "https://camelcamelcamel.com/search?sq=" },
+			"dr": { name: "Drupal.org", url: "https://www.drupal.org/search/site/" },
+			"eb": { name: "eBay", url: "https://www.ebay.com/sch/i.html?_sacat=0&_sop=15&_from=R40&_nkw=" },
+			"g": { name: "Google", url: "https://www.google.com/search?q=" },
+			"gd": { name: "Goodreads", url: "https://www.goodreads.com/search?q=" },
+			"gl": { name: "Google (I'm Feeling Lucky)", url: "https://www.google.com/search?btnI=1&q=" },
+			"gn": { name: "Google News", url: "https://news.google.com/search?hl=en-US&gl=US&ceid=US%3Aen&q=" },
+			"gt": { name: "GitHub", url: "https://github.com/search?q=" },
+			"hb": { name: "H-E-B", url: "https://www.heb.com/search/?q=" },
+			"hp": { name: "Hoopla Digital", url: "https://www.hoopladigital.com/search?page=1&q=" },
+			"kg": { name: "Kagi", url: "https://kagi.com/search?q=" },
+			"ks": { name: "Kagi Summarizer", url: "https://kagi.com/summarizer/index.html?target_language=&summary=summary&url=" },
+			"lb": { name: "Libby (Austin Public Library)", url: "https://libbyapp.com/search/austinlibrary/search/scope-auto/query-%s/page-1" },
+			"ls": { name: "List commands (current page)", url: window.location.href },
+			"lt": { name: "Listen Notes", url: "https://www.listennotes.com/search/?q=" },
+			"mc": { name: "MCP.directory", url: "https://mcp.directory/servers?q=" },
+			"ov": { name: "OverDrive", url: "https://www.overdrive.com/search?q=" },
+			"pn": { name: "Pinboard", url: "https://pinboard.in/search/?query=" },
+			"pr": { name: "Perplexity AI", url: "https://www.perplexity.ai/search?q=" },
+			"rd": { name: "Reddit", url: "https://www.reddit.com/search/?q=" },
+			"rn": { name: "Raindrop.io", url: "https://app.raindrop.io/my/0/" },
+			"rr": { name: "Readwise Reader", url: "https://read.readwise.io/search?q=" },
+			"rw": { name: "Readwise", url: "https://readwise.io/search?q=" },
+			"sb": { name: "SoBrief", url: "https://sobrief.com/search?q=" },
+			"sg": { name: "TheStoryGraph", url: "https://app.thestorygraph.com/browse?search_term=%s" },
+			"sk": { name: "Skills.sh", url: "https://skills.sh/?q=" },
+			"sl": { name: "Slickdeals", url: "https://slickdeals.net/newsearch.php?q=" },
+			"sm": { name: "Smry.ai", url: "https://www.smry.ai/proxy?url=" },
+			"st": { name: "Stack Overflow", url: "https://stackoverflow.com/search?q=" },
+			"th": { name: "ThriftBooks", url: "https://www.thriftbooks.com/browse/?b.search=" },
+			"tw": { name: "Twitter", url: "https://twitter.com/search?q=" },
+			"vb": { name: "vb.lk (Vibe Links)", url: "https://vb.lk/" },
+			"wk": { name: "Wikipedia", url: "https://en.wikipedia.org/w/index.php?title=Special%3ASearch&ns0=1&fulltext=Search&search=" },
+			"wr": { name: "WorldCat", url: "https://www.worldcat.org/search?q=" },
+			"yt": { name: "YouTube", url: "https://www.youtube.com/results?search_query=" }
+		};
 
 		// Check for URL parameters and redirect immediately if present
 		var urlParams = new URLSearchParams(window.location.search);
@@ -230,8 +230,9 @@
 		if (urlQuery && urlQuery.trim()) {
 			var command = urlQuery.split(" ")[0];
 			if (command !== "ls") {
-				var url = searchCommands[command] || searchCommands["g"];
-				if (command in searchCommands) {
+				var config = searchConfig[command] || { name: "Google", url: "https://www.google.com/search?q=" };
+				var url = config.url;
+				if (command in searchConfig) {
 					var searchTerm = urlQuery.slice(command.length + 1).trim();
 					if (searchTerm) {
 						if (url.includes('%s')) {
@@ -245,7 +246,7 @@
 						window.location.href = baseUrl.protocol + "//" + baseUrl.hostname;
 					}
 				} else {
-					window.location.href = searchCommands["g"] + encodeURIComponent(urlQuery);
+					window.location.href = searchConfig["g"].url + encodeURIComponent(urlQuery);
 				}
 			}
 		}

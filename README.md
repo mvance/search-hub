@@ -29,8 +29,8 @@ Type just the command to go to the site's homepage:
 
 ### URL Parameters
 You can also use it as a search engine by passing queries via URL:
-- `sub.html?q=g search term` → Redirects to Google search
-- `sub.html?q=am` → Redirects to Amazon homepage
+- `index.html?q=g search term` → Redirects to Google search
+- `index.html?q=am` → Redirects to Amazon homepage
 
 ## Available Commands
 
@@ -51,6 +51,7 @@ You can also use it as a search engine by passing queries via URL:
 | `gt` | GitHub |
 | `hb` | H-E-B |
 | `hp` | Hoopla Digital |
+| `im` | IMDb |
 | `kg` | Kagi |
 | `ks` | Kagi Summarizer |
 | `ls` | List commands (current page) |
@@ -73,16 +74,16 @@ You can also use it as a search engine by passing queries via URL:
 ## Installation
 
 1. Download or clone this repository
-2. Open `sub.html` in your web browser
+2. Open `index.html` in your web browser
 3. Optionally, set it as your browser's homepage or new tab page
 
 ## Customization
 
-To add or modify search commands, edit the `searchCommands` object in the JavaScript section of `sub.html`:
+To add or modify search commands, edit the `searchConfig` object in the JavaScript section of `index.html`:
 
 ```javascript
-const searchCommands = {
-    "your_command": "https://example.com/search?q=",
+const searchConfig = {
+    "your_command": { name: "Site Name", url: "https://example.com/search?q=" },
     // ... other commands
 };
 ```
@@ -90,7 +91,7 @@ const searchCommands = {
 ## Browser Integration
 
 ### Set as Homepage
-Set `file:///path/to/sub.html` as your browser's homepage for quick access.
+Set `file:///path/to/index.html` as your browser's homepage for quick access.
 
 ### Bookmark
 Create a bookmark for easy access from any page.

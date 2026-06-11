@@ -370,6 +370,7 @@
 			
 			const card = document.createElement("div");
 			card.className = "command-card";
+			card.setAttribute('data-command', command);
 			card.onclick = function(e) {
 				if (e.target.classList.contains('command-name')) {
 					// Command name clicked - go to site
@@ -411,6 +412,32 @@
 			card.appendChild(siteName);
 			commandsGrid.appendChild(card);
 		}
+
+		// Real-time filtering for command cards
+		const searchBox = document.getElementById('search-box');
+		searchBox.addEventListener('input', function() {
+			const value = this.value.trim().toLowerCase();
+			const fullValue = this.value.toLowerCase();
+			const hasSpace = fullValue.includes(' ');
+			const filterText = hasSpace ? fullValue.split(' ')[0] : value;
+			
+			const cards = document.querySelectorAll('.command-card');
+			cards.forEach(card => {
+				const command = card.getAttribute('data-command').toLowerCase();
+				if (!filterText && !hasSpace) {
+					card.style.display = 'block';
+				} else if (hasSpace) {
+					card.style.display = command === filterText ? 'block' : 'none';
+				} else {
+					card.style.display = command.startsWith(filterText) ? 'block' : 'none';
+				}
+			});
+			
+			// Close any open details when filtering
+			const allDetails = document.querySelectorAll('.command-details');
+			allDetails.forEach(detail => detail.classList.remove('show'));
+			cards.forEach(card => card.classList.remove('expanded'));
+		});
 
 	</script>
 	<script>

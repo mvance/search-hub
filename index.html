@@ -184,7 +184,7 @@
 			"am": { name: "Amazon", url: "https://www.amazon.com/s?k=" },
 			"ar": { name: "Archive.org", url: "https://archive.org/search.php?query=" },
 			"as": { name: "Austin Public Library", url: "https://austin.bibliocommons.com/v2/search?searchType=smart&query=" },
-			"bk": { name: "BookPecker", url: "https://www.bookpecker.com/search/" },
+			"bk": { name: "BookPecker", url: "https://www.bookpecker.com/search/", favicon: "https://icons.duckduckgo.com/ip3/bookpecker.com.ico" },
 			"bl": { name: "Blinkist", url: "https://www.blinkist.com/en/app/search?q=%s" },
 			"br": { name: "BoardGameGeek", url: "https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q=" },
 			"ch": { name: "ch.at", url: "https://ch.at/search?q=" },
@@ -193,7 +193,7 @@
 			"dr": { name: "Drupal.org", url: "https://www.drupal.org/search/site/" },
 			"dc": { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
 			"eb": { name: "eBay", url: "https://www.ebay.com/sch/i.html?_sacat=0&_sop=15&_from=R40&_nkw=" },
-			"fs": { name: "Fastmail", url: "https://app.fastmail.com/mail/search:" },
+			"fs": { name: "Fastmail", url: "https://app.fastmail.com/mail/search:", favicon: "https://icons.duckduckgo.com/ip3/app.fastmail.com.ico" },
 			"g": { name: "Google", url: "https://www.google.com/search?q=" },
 			"gd": { name: "Goodreads", url: "https://www.goodreads.com/search?q=" },
 			"gl": { name: "Google (I'm Feeling Lucky)", url: "https://www.google.com/search?btnI=1&q=" },
@@ -210,7 +210,7 @@
 			"lt": { name: "Listen Notes", url: "https://www.listennotes.com/search/?q=" },
 			"mc": { name: "MCP.directory", url: "https://mcp.directory/servers?q=" },
 			"ov": { name: "OverDrive", url: "https://www.overdrive.com/search?q=" },
-			"pn": { name: "Pinboard", url: "https://pinboard.in/search/?query=" },
+			"pn": { name: "Pinboard", url: "https://pinboard.in/search/?query=", favicon: "https://icons.duckduckgo.com/ip3/pinboard.in.ico" },
 			"pr": { name: "Perplexity AI", url: "https://www.perplexity.ai/search?q=" },
 			"rd": { name: "Reddit", url: "https://www.reddit.com/search/?q=" },
 			"rn": { name: "Raindrop.io", url: "https://app.raindrop.io/my/0/" },
@@ -224,7 +224,7 @@
 			"st": { name: "Stack Overflow", url: "https://stackoverflow.com/search?q=" },
 			"th": { name: "ThriftBooks", url: "https://www.thriftbooks.com/browse/?b.search=" },
 			"tw": { name: "Twitter", url: "https://twitter.com/search?q=" },
-			"vb": { name: "vb.lk (Vibe Links)", url: "https://vb.lk/" },
+			"vb": { name: "vb.lk (Vibe Links)", url: "https://vb.lk/", favicon: "https://icons.duckduckgo.com/ip3/vb.lk.ico" },
 			"wk": { name: "Wikipedia", url: "https://en.wikipedia.org/w/index.php?title=Special%3ASearch&ns0=1&fulltext=Search&search=" },
 			"wr": { name: "WorldCat", url: "https://www.worldcat.org/search?q=" },
 			"yt": { name: "YouTube", url: "https://www.youtube.com/results?search_query=" }
@@ -348,7 +348,7 @@
 			const hostname = new URL(config.url).hostname;
 			const favicon = document.createElement("img");
 			favicon.className = "command-favicon";
-			favicon.src = `https://www.google.com/s2/favicons?domain=${hostname}&sz=16`;
+			favicon.src = config.favicon || `https://www.google.com/s2/favicons?domain=${hostname}&sz=16`;
 			favicon.alt = "";
 			favicon.onerror = function() {
 				// If Google fails, fallback to DDG.

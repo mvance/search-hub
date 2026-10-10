@@ -68,6 +68,7 @@ You can also use it as a search engine by passing queries via URL:
 | `tw` | Twitter |
 | `vb` | vb.lk (Vibe Links) |
 | `wk` | Wikipedia |
+| `wl` | Walmart |
 | `wr` | WorldCat |
 | `yt` | YouTube |
 
